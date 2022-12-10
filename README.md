@@ -2,51 +2,51 @@
 
 ### Repository for Module1. Essentials of Mathematics and Statistics
 
-**Week01. Fundamentals**
+**<ins>Week01. Fundamentals</ins>**
 
-> Day01. Foundation of Probability
+##### Day01. Foundation of Probability
 
-> Day02. Discrete Probability Distributions
+##### Day02. Discrete Probability Distributions
 
-'m1_markov_chains`
+`m1_markov_chains`
 
-> Day03. Continuous Probability Distributions
+##### Day03. Continuous Probability Distributions
 
 `m1_monte_carlo`
 
-> Day04. Sampling Statistic & Estimation
+##### Day04. Sampling Statistic & Estimation
 
-**Week02. Statistical Modelling**
+**<ins>Week02. Statistical Modelling</ins>**
 
-> Day01. Interval Estimation
+##### Day01. Interval Estimation
 
 `m1_maximum_likelihood_estimation`
 
-> Day02. Hypothesis Testing
+##### Day02. Hypothesis Testing
 
 `m1_computational_testing`
 
-> Day03. Linear Algebra
+##### Day03. Linear Algebra
 
-> Day04. Applying Linear Algebra
+##### Day04. Applying Linear Algebra
 
-> Day05. Principal Component Analysis
+##### Day05. Principal Component Analysis
 
 `m1_pca`
 
-**Week03. Regression**
+**<ins>Week03. Regression</ins>**
 
-> Day01. Linear Regression
+##### Day01. Linear Regression
 
 `m1_linear_regression`
 
-> Day02. Multiple Regression
+##### Day02. Multiple Regression
 
 'm1_multiple_regression`
 
-> Day03. Generalised Linear Models
+##### Day03. Generalised Linear Models
 
 `m1_generalised_linear_models`
 
-> Day04. Review
+##### Day04. Review
 
