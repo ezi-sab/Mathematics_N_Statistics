@@ -1,0 +1,266 @@
+---
+title: "A Monopoly Simulation"
+output: html_notebook
+---
+
+In this session, we will simulate simplified games of **Monopoly**.
+
+### Moving around the board
+
+Basically, a Monopoly board has 40 spaces - Players take it in turns to roll two dice and traverse around the  board according to the sum of the dice values.
+
+**Simulate turns of a Single player**
+```{r}
+# Number of turns to take
+num_turns <- 100000 
+
+# Start on the GO space
+current_board_position <- 0 
+
+positions_visited <- rep(0, num_turns) # Store the positions
+
+# Use a for loop
+# to simulate a number of turns
+for (turn in 1:num_turns) {
+
+  # Roll two dice
+  die_values <- sample(c(1:6), 2, replace = TRUE)
+
+  ## Move player position
+  
+  # Number of positions to move
+  plus_move <- sum(die_values)
+  # Compute new board position
+  new_board_position <- current_board_position + plus_move
+
+  # Update board position (this corrects for the fact the board is circular)
+  current_board_position <- (new_board_position %% 40)
+
+  # Store position visited
+  positions_visited[turn] <- current_board_position
+
+}
+```
+
+By increasing the number of turns taken, what distribution does the set of simulated board positions converge towards?
+
+```{r}
+hist(positions_visited, breaks = seq(0, 40, len = 41), right = FALSE)
+```
+
+### Going to Jail
+
+If a player lands on to Go To Jail space they must move immediately to the Jail space. Extend your code to include the possibility of going to jail. Here, assume that once in jail, the player continues as normal on the next turn.
+
+```{r}
+# Number of turns to take
+num_turns <- 100000 
+
+# Start on the GO space
+current_board_position <- 0 
+# The go to jail space
+go_to_jail_position <- 30 
+# The Jail space
+jail_position <- 10 
+
+positions_visited <- rep(0, num_turns) # Store the positions
+
+# Use a for loop
+# to simulate a number of turns
+for (turn in 1:num_turns) {
+
+  # Roll two dice
+  die_values <- sample(c(1:6), 2, replace = TRUE)
+
+  ## Move player position
+
+  # Number of positions to move
+  plus_move <- sum(die_values)
+  # Compute new board position
+  new_board_position <- current_board_position + plus_move
+
+  # if land on GO TO JAIL square
+  # then go backwards to the JAIL square
+  if (new_board_position == go_to_jail_position) {
+    new_board_position <- jail_position
+  }
+
+  # Update board position (this corrects for the fact the board is circular)
+  current_board_position <- (new_board_position %% 40)
+
+  # Store position visited
+  positions_visited[turn] <- current_board_position
+
+}
+```
+
+```{r}
+hist(positions_visited, breaks = seq(0, 40, len = 41), right = FALSE)
+```
+You can also go to jail, if you roll three doubles (both dice having the same value) in a row. Update your code to allow for the possibility of going to Jail with three doubles.
+
+```{r}
+# Number of turns to take
+num_turns <- 100000 
+
+# Start on the GO space
+current_board_position <- 0 
+# The go to jail space
+go_to_jail_position <- 30 
+# The Jail space
+jail_position <- 10 
+
+positions_visited <- rep(0, num_turns) # Store the positions
+
+# Use a for loop
+# to simulate a number of turns
+for (turn in 1:num_turns) {
+  
+  # Set double counter to zero
+  double_counter <- 0
+  
+  # Roll 1-3(Max) times
+  for (j in 1:3){
+
+    # Roll two dice
+    die_values <- sample(c(1:6), 2, replace = TRUE)
+
+    # if we have rolled a double for the third time, we proceed straight to jail
+    if ((die_values[1] == die_values[2]) & (double_counter == 2 )) {
+      current_board_position <- jail_position
+      break
+    }
+    
+    ##Otherwise -  Move player position
+
+    # Number of positions to move
+    plus_move <- sum(die_values)
+    # Compute new board position
+    new_board_position <- current_board_position + plus_move
+
+    # if land on GO TO JAIL square
+    # then go backwards to the JAIL square
+    if (new_board_position == go_to_jail_position) {
+      new_board_position <- jail_position
+    }
+
+    # Update board position (this corrects for the fact the board is circular)
+    current_board_position <- (new_board_position %% 40)
+
+    # break out of loop if we roll a non-double
+    if (die_values[1] != die_values[2]) {
+      break
+    } else { # increment double counter
+      double_counter <- double_counter + 1
+    }
+  }
+  
+  # store final position visited
+  positions_visited[turn] <- current_board_position
+
+}
+```
+
+```{r}
+hist(positions_visited, breaks = seq(0, 40, len = 41), right = FALSE)
+```
+
+
+### Further Exercise
+
+Now consider building a more complex Monopoly simulation by incorporating more complex aspects of the game - the purchase of properties, a ledger for each player and chance and community cards.
+
+```{r}
+# Number of games to play
+num_games <- 1000  
+# Number of turns to take
+num_turns <- 1000  
+
+# Start on the GO space
+current_board_position <- 0 
+# The go to jail space
+go_to_jail_position <- 30 
+# The Jail space
+jail_position <- 10 
+
+# Vector of squares containing properties
+properties_that_can_be_bought <- c(1, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15, 16, 18, 19, 
+                                   21, 23, 24, 25, 26, 27, 28, 29, 31, 32, 34, 35, 37, 39)
+
+# Vector to store number of turns to buy all properties
+time_to_buy_all_properties <- rep(0, num_games)
+
+# Simulate multiple games
+for (game in 1:num_games) {
+
+  positions_visited <- rep(0, num_turns)
+  positions_purchased <- rep(0, 40)
+  properties_bought <- rep(0, num_turns)
+
+  # Use a for loop 
+  # to simulate a number of turns
+  for (turn in 1:num_turns) {
+
+    # Roll two dice
+    die_values <- sample(c(1:6), 2, replace = TRUE)
+
+    ## Move player position
+
+    # Number of positions to move
+    plus_move <- sum(die_values)
+    # Compute new board position
+    new_board_position <- current_board_position + plus_move
+
+
+    # if land on GO TO JAIL square
+    # then go backwards to the JAIL square
+    if (new_board_position == go_to_jail_position) {
+      new_board_position <- jail_position
+    }
+
+    # Update board position (this corrects for the fact the board is circular)
+    current_board_position <- (new_board_position %% 40)
+
+    # if we can on a square that can be purchased and which has not been
+    # purchased (note R uses 1-indexing for arrays)
+    if (positions_purchased[current_board_position+1] == 0) {
+      if (current_board_position %in% properties_that_can_be_bought) {
+        positions_purchased[current_board_position + 1] <- 1
+      }
+    }
+
+    # Store position visited
+    positions_visited[turn] <- current_board_position
+
+    # Store number of properties bought
+    properties_bought[turn] <- sum(positions_purchased)
+
+    # Check if all properties are gone
+    if (properties_bought[turn] == length(properties_that_can_be_bought)) {
+      time_to_buy_all_properties[game] <- turn
+      break
+    }
+  }
+
+}
+```
+
+```{r}
+hist(time_to_buy_all_properties, breaks = 20)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

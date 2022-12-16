@@ -1,0 +1,94 @@
+---
+title: "Markov Chain"
+output: html_notebook
+---
+
+In this session, we will look at a **Markov Chain**.
+
+A Markov Chain is defined by three properties:
+
+1. A state space: A set of values/states in which a process could exist
+
+2. A transition matrix: Define the probebility of moving from one state to another state
+
+3. A current state probability distribution: Define the probability of being in any one of the states at the start of the process
+
+### Exercise
+
+![An image of Markov Chain Exercise](/rds/homes/e/exk986/ws/Mathematics_N_Statistics/markovChain.png)
+
+
+```{r}
+# Create a 2x2 Matrix
+# consisting of the transition probabilities shown in the diagram
+transitionMatrix = matrix(c(0.4, 0.6, 
+                            0.7, 0.3), nrow=2, ncol=2, byrow=TRUE)
+
+print(transitionMatrix)
+```
+```{r}
+rownames(transitionMatrix) <- c("Sunny", "Rainy")
+colnames(transitionMatrix) <- c("Sunny", "Rainy")
+
+print(transitionMatrix)
+```
+
+Suppose we want to simulate a sequence of 30 days and the weather patterns over those days - Assume that on day 0 it is currently sunny.
+
+```{r}
+# initial state 
+state <- "Sunny" # Assume that on day 0 it is currently sunny
+# vector to store simulated values
+weather_sequence <- rep(0, 30) #Replicate the values 0 30 times
+
+# simulate for 30 days
+for (day in 1:30) { 
+  pr <- transitionMatrix[state, ] # select the row of transition probabilities
+
+  # sample(x, size=n, prob). Take a sample of specified size n from element x
+  state = sample(c("Sunny", "Rainy"), size = 1, prob = pr) # Sample "Sunny"/"Rainy" based on pr
+  weather_sequence[day] <- state # Store the sampled state
+}
+
+# print the simulated weather sequence
+print(weather_sequence)
+```
+
+
+### Problem
+
+Can we extend this example to a three-state model?
+
+![An image of Markov Chain Problem](/rds/homes/e/exk986/ws/Mathematics_N_Statistics/markovChain_Prob.png)
+
+
+```{r}
+# Create a 3x3 Matrix
+# consisting of the transition probabilities shown in the diagram
+prob_transitionMatrix = matrix(c(0.7, 0.2, 0.1, 
+                                 0.3, 0.3, 0.4, 
+                                 0.6, 0.2, 0.2), nrow=3, ncol=3, byrow=TRUE)
+rownames(prob_transitionMatrix) <- c("Sunny", "Rainy", "Cloudy")
+colnames(prob_transitionMatrix) <- c("Sunny", "Rainy", "Cloudy")
+
+print(prob_transitionMatrix)
+```
+
+```{r}
+# initial state 
+prob_state <- "Sunny" # Assume that on day 0 it is currently rainy
+# vector to store simulated values
+prob_weather_sequence <- rep(0, 30) #Replicate the values 0 30 times
+
+# simulate for 30 days
+for (day in 1:30) { 
+  prob_pr <- prob_transitionMatrix[prob_state, ] # select the row of transition probabilities
+
+  # sample(x, size=n, prob). Take a sample of specified size n from element x
+  prob_state = sample(c("Sunny", "Rainy", "Cloudy"), size = 1, prob = prob_pr) # Sample "Sunny"/"Rainy" based on pr
+  prob_weather_sequence[day] <- prob_state # Store the sampled state
+}
+
+# print the simulated weather sequence
+print(prob_weather_sequence)
+```
